@@ -11,6 +11,7 @@ import com.example.news.models.Article
 @Database(
     entities = [Article::class],
     version = 1,
+    exportSchema = false
     )
 
 @TypeConverters(Converters::class)
@@ -36,6 +37,7 @@ abstract class ArticleDatabase : RoomDatabase() {
     }
 }
 
+/*
 class ArticleDatabase {
 
-}
+}*/
