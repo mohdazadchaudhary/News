@@ -11,7 +11,7 @@ import com.example.news.repository.NewsRepository
 import com.example.news.ui.fragments.NewsViewModelProviderFactory
 import com.example.news.util.NewsViewModel
 
-class NewsActivity : AppCompatActivity() {
+class NewsActivity(val NewsViewModel: NewsViewModel) : AppCompatActivity() {
 
     lateinit var viewModel: NewsViewModel
     private lateinit var binding: ActivityNewsBinding
