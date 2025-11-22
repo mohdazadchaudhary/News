@@ -6,7 +6,7 @@ import com.example.news.models.Source
 class Converters {
     @TypeConverter
     fun fromSources(source: Source): String {
-        return source.name
+        return source.name ?: ""
     }
 
     @TypeConverter

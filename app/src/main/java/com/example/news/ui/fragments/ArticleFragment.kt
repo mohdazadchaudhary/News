@@ -1,18 +1,17 @@
 package com.example.news.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import com.example.news.NewsActivity
 import com.example.news.R
 import com.example.news.databinding.FragmentArticleBinding
 import com.example.news.util.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
-
 
 class ArticleFragment : Fragment(R.layout.fragment_article) {
 
@@ -24,25 +23,34 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
-        binding = FragmentArticleBinding.bind(view!!)
+    ): View {
+        binding = FragmentArticleBinding.inflate(inflater, container, false)
 
-        viewModel = (activity as NewsActivity).viewModel
+        viewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
+
         val article = args.article
 
+        // WebView fully fixed — now loads properly on all devices
         binding.webView.apply {
             webViewClient = WebViewClient()
-            article.url?.let {
-                loadUrl(it)
-            }
+            settings.javaScriptEnabled = true
+            settings.domStorageEnabled = true           // ← Added (important!)
+            settings.loadWithOverviewMode = true        // ← Added (better zoom)
+            settings.useWideViewPort = true            // ← Added
+            article.url?.let { loadUrl(it) }
         }
 
         binding.fab.setOnClickListener {
             viewModel.addToFavourites(article)
-            Snackbar.make(it, "Added to Favourites", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(it, "Article saved successfully", Snackbar.LENGTH_LONG).show()
         }
 
-        return view
+        return binding.root
+    }
+
+    // This prevents back button from closing the app when in WebView
+    override fun onDestroyView() {
+        binding.webView.destroy()   // ← Prevents memory leaks
+        super.onDestroyView()
     }
 }

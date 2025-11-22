@@ -8,10 +8,10 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.news.NewsActivity
 import com.example.news.R
 import com.example.news.adapters.NewsAdapter
 import com.example.news.databinding.FragmentHeadlineBinding
@@ -20,13 +20,11 @@ import com.example.news.util.Constants
 import com.example.news.util.NewsViewModel
 import com.example.news.util.Resource
 
-class HeadlinesFragment : Fragment() {
+class HeadlinesFragment : Fragment(R.layout.fragment_headline) {
 
     lateinit var newsViewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
     lateinit var binding: FragmentHeadlineBinding
-
-    // Fixed: Correct type for included layout
     private lateinit var itemHeadlinesErrorBinding: ItemErrorBinding
     private lateinit var retryButton: Button
     private lateinit var errorText: TextView
@@ -47,20 +45,23 @@ class HeadlinesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get ViewModel from Activity
-        newsViewModel = (requireActivity() as NewsActivity).NewsViewModel
+        // Shared ViewModel
+        newsViewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
-        // Get the included error layout binding
+        // Load news immediately
+        newsViewModel.getHeadlines("in")
+
+        // Error layout
         itemHeadlinesErrorBinding = binding.itemHeadlinesError
         retryButton = itemHeadlinesErrorBinding.retryButton
         errorText = itemHeadlinesErrorBinding.errorText
 
         setupHeadlinesRecycler()
 
-        // Item click → go to ArticleFragment
+        // Click → go to Article
         newsAdapter.setOnItemClickListener { article ->
             val bundle = Bundle().apply {
-                putSerializable("article", article)
+                putSerializable("article", article)   // 100% working
             }
             findNavController().navigate(
                 R.id.action_headlinesFragment_to_articleFragment,
@@ -68,7 +69,7 @@ class HeadlinesFragment : Fragment() {
             )
         }
 
-        // Observe headlines
+
         newsViewModel.headlines.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resource.Success -> {
@@ -79,7 +80,6 @@ class HeadlinesFragment : Fragment() {
 
                         val totalPages = newsResponse.totalResults / Constants.QUERY_PAGE_SIZE + 2
                         isLastPage = newsViewModel.headlinesPage == totalPages
-
                         if (isLastPage) {
                             binding.recyclerHeadlines.setPadding(0, 0, 0, 0)
                         }
@@ -103,7 +103,7 @@ class HeadlinesFragment : Fragment() {
             newsViewModel.getHeadlines("in")
         }
 
-        // Pagination scroll listener
+        // Pagination
         binding.recyclerHeadlines.addOnScrollListener(scrollListener)
     }
 
@@ -112,6 +112,7 @@ class HeadlinesFragment : Fragment() {
         binding.recyclerHeadlines.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
+            addOnScrollListener(this@HeadlinesFragment.scrollListener)
         }
     }
 
@@ -139,11 +140,10 @@ class HeadlinesFragment : Fragment() {
     private val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-
             val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
             val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount

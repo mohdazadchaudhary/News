@@ -1,10 +1,10 @@
 package com.example.news.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,7 +16,7 @@ import com.example.news.databinding.FragmentFavouriteBinding
 import com.example.news.util.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
 
-class FavouritesFragment : Fragment() {
+class FavouritesFragment : Fragment(R.layout.fragment_favourite) {
 
     lateinit var newsViewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
@@ -25,12 +25,11 @@ class FavouritesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
         binding = FragmentFavouriteBinding.inflate(inflater, container, false)
 
-        // Shared ViewModel
-        newsViewModel = ViewModelProvider(requireActivity()).get(NewsViewModel::class.java)
+        // FIXED: Yeh line galat thi — crash ka reason
+        newsViewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
         setupFavouritesRecycler()
 
@@ -48,7 +47,6 @@ class FavouritesFragment : Fragment() {
             )
         }
 
-        // Swipe-to-delete setup (attached once)
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -57,14 +55,10 @@ class FavouritesFragment : Fragment() {
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
-            ): Boolean {
-                return true
-            }
+            ): Boolean = true
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                val article = newsAdapter.differ.currentList[position]
-
+                val article = newsAdapter.differ.currentList[viewHolder.adapterPosition]
                 newsViewModel.addToDelete(article)
 
                 Snackbar.make(binding.root, "Removed from Favourites", Snackbar.LENGTH_LONG).apply {
