@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.news.NewsActivity
 import com.example.news.R
 import com.example.news.adapters.NewsAdapter
 import com.example.news.databinding.FragmentHeadlineBinding
@@ -45,8 +46,7 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headline) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Shared ViewModel
-        newsViewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
+        newsViewModel = (requireActivity() as NewsActivity).viewModel
 
         // Load news immediately
         newsViewModel.getHeadlines("in")

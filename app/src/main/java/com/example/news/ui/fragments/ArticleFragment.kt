@@ -30,13 +30,13 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
         val article = args.article
 
-        // WebView fully fixed — now loads properly on all devices
+
         binding.webView.apply {
             webViewClient = WebViewClient()
             settings.javaScriptEnabled = true
-            settings.domStorageEnabled = true           // ← Added (important!)
-            settings.loadWithOverviewMode = true        // ← Added (better zoom)
-            settings.useWideViewPort = true            // ← Added
+            settings.domStorageEnabled = true
+            settings.loadWithOverviewMode = true
+            settings.useWideViewPort = true
             article.url?.let { loadUrl(it) }
         }
 
