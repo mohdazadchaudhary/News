@@ -140,10 +140,3 @@ Your improvements help the project grow for everyone!
 
 ---
 
-## 📄 License
-
-This project is open-source and free to use under the **MIT License**.
-
-Feel free to build on it, learn from it, or turn it into something amazing.
-
----
