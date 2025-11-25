@@ -114,6 +114,11 @@ This project is **100% open-source**, meaning anyone can clone it, improve it, c
 
 ---
 
+---
+## 📲 Download APK
+APK Link: https://drive.google.com/file/d/1Kkk2Er5qlwIASTK5T_OoU1y1-8V0BCcp/view?usp=drive_link
+
+---
 ## 📥 How to Get Started
 
 1. Clone or download the project ZIP.
