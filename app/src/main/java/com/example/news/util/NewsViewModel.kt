@@ -36,7 +36,7 @@ class NewsViewModel(
     var oldSearchQuery: String? = null
 
     init {
-        getHeadlines("in")
+        getHeadlines("us")
     }
 
     fun getHeadlines(countryCode: String) = viewModelScope.launch {

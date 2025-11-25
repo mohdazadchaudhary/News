@@ -50,7 +50,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Fixed: Initialize ViewModel AFTER view is created
         newsViewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
         itemSearchErrorBinding = binding.itemSearchError
@@ -59,7 +58,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         setupSearchRecycler()
 
-        // Item click → go to ArticleFragment
         newsAdapter.setOnItemClickListener { article ->
             val bundle = Bundle().apply {
                 putSerializable("article", article)

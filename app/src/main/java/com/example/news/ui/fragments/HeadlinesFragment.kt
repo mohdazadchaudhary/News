@@ -49,7 +49,7 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headline) {
         newsViewModel = (requireActivity() as NewsActivity).viewModel
 
         // Load news immediately
-        newsViewModel.getHeadlines("in")
+        newsViewModel.getHeadlines("us")
 
         // Error layout
         itemHeadlinesErrorBinding = binding.itemHeadlinesError
@@ -100,7 +100,7 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headline) {
 
         // Retry button
         retryButton.setOnClickListener {
-            newsViewModel.getHeadlines("in")
+            newsViewModel.getHeadlines("us")
         }
 
         // Pagination
@@ -153,7 +153,7 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headline) {
                     isNotAtBeginning && isTotalMoreThanVisible && isScrolling
 
             if (shouldPaginate) {
-                newsViewModel.getHeadlines("in")
+                newsViewModel.getHeadlines("us")
                 isScrolling = false
             }
         }

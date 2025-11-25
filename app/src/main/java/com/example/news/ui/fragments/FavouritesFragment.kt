@@ -28,7 +28,7 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourite) {
     ): View {
         binding = FragmentFavouriteBinding.inflate(inflater, container, false)
 
-        // FIXED: Yeh line galat thi — crash ka reason
+
         newsViewModel = ViewModelProvider(requireActivity())[NewsViewModel::class.java]
 
         setupFavouritesRecycler()
