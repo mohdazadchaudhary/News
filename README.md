@@ -55,8 +55,8 @@ This project is **100% open-source**, meaning anyone can clone it, improve it, c
 
 ### **Drawable**
 
-* fav
-* lang
+* favourite
+* headline
 * search
 * search_border.xml
 
