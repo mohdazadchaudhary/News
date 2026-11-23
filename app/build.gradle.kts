@@ -1,9 +1,28 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("androidx.navigation.safeargs.kotlin")
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+
+val secretsProperties = Properties()
+val secretsPropertiesFile = rootProject.file("secrets.properties")
+if (secretsPropertiesFile.exists()) {
+    secretsProperties.load(FileInputStream(secretsPropertiesFile))
+}
+
+val apiKey = secretsProperties.getProperty("NEWS_API_KEY")
+    ?: localProperties.getProperty("NEWS_API_KEY")
+    ?: "673d0efb6182454b949d71fbf620b760"
 
 android {
     namespace = "com.example.news"
@@ -17,6 +36,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -37,6 +57,7 @@ android {
     }
     buildFeatures{
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -54,11 +75,11 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 
     // Room
-    implementation ("androidx.room:room-runtime:2.6.0")
-    ksp ("androidx.room:room-compiler:2.6.0")
+    implementation ("androidx.room:room-runtime:2.8.5")
+    ksp ("androidx.room:room-compiler:2.8.5")
 
     // Kotlin Extensions and Coroutines support for Room
-    implementation ("androidx.room:room-ktx:2.6.0")
+    implementation ("androidx.room:room-ktx:2.8.5")
 
     // Coroutines
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
